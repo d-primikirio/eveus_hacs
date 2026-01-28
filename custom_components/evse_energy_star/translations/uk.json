@@ -46,20 +46,15 @@
       "evse_energy_star_status": {
         "name": "Статус зарядки",
         "state": {
-          "no_data": "Немає даних",
-          "charging": "Заряд",
+          "startup": "Запуск",
+          "system_test": "Тест системи",
           "waiting": "Очікування",
-          "ready": "Готовий",
-          "delayed_start": "Відкладений старт",
-          "overcurrent": "Перевищення струму",
-          "overvoltage": "Перевищення напруги",
-          "leakage": "Витік",
-          "station_error": "Помилка станції",
-          "overtemperature": "Перевищення температури",
-          "locked": "Заблоковано",
-          "no_ground": "Немає заземлення",
-          "plug_overheat": "Перегрів вилки",
-          "undervoltage": "Низька напруга"
+          "connected": "Підключено",
+          "charging": "Заряд",
+          "charge_complete": "Заряд завершено",
+          "suspended": "Призупинено",
+          "error": "Помилка",
+          "unknown": "Невідомо"
         }
       },
       "evse_energy_star_current_set": {
@@ -72,13 +67,13 @@
         "name": "Напруга фаза 1"
       },
       "evse_energy_star_temperature_box": {
-        "name": "Темп. корпусу"
+        "name": "Температура боксу"
       },
       "evse_energy_star_temperature_socket": {
-        "name": "Темп. роз'єму"
+        "name": "Температура вилки"
       },
       "evse_energy_star_leakage": {
-        "name": "Витік"
+        "name": "Струм витоку"
       },
       "evse_energy_star_session_energy": {
         "name": "Енергія сесії"
@@ -87,7 +82,7 @@
         "name": "Час сесії"
       },
       "evse_energy_star_total_energy": {
-        "name": "Загальна енергія"
+        "name": "Всього"
       },
       "evse_energy_star_system_time": {
         "name": "Системний час"
@@ -98,10 +93,10 @@
     },
     "number": {
       "evse_energy_star_current_limit": {
-        "name": "Обмеження струму"
+        "name": "Дозволений струм"
       },
       "evse_energy_star_voltage_adaptive": {
-        "name": "Напруга адаптації"
+        "name": "Поріг зниження напруги"
       }
     },
     "select": {
@@ -120,21 +115,27 @@
         "name": "Режим 16А"
       },
       "evse_energy_star_schedule": {
-        "name": "Заряджати за розкладом"
+        "name": "Робота за розкладом"
       },
       "evse_energy_star_one_charge": {
         "name": "Один заряд"
       },
       "evse_energy_star_adaptive_mode": {
         "name": "Адаптивний режим"
+      },
+      "evse_energy_star_stop_charging": {
+        "name": "Зупинити процес заряду"
+      },
+      "evse_energy_star_suspend_limits": {
+        "name": "Відключити ліміти"
       }
     },
     "button": {
       "evse_energy_star_time_get": {
-        "name": "Синхронізувати час"
+        "name": "Оновити час"
       },
       "evse_energy_star_start_now": {
-        "name": "Почати зарядку"
+        "name": "Відключити ліміти та розклади"
       }
     },
     "time": {

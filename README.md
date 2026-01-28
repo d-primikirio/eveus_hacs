@@ -8,11 +8,18 @@ Home Assistant integration for local control of **Energy Star Pro** and **Eveus 
 
 ---
 
-## 🆕 Changes from Original Version 1.2.0
+## 🆕 Why This Fork?
 
-### Bug Fixes:
-- ✅ Fixed incorrect current sensor values
-- ✅ Fixed incorrect power sensor values
+This fork fixes critical issues and adds complete web interface parity that the original lacks.
+
+### What's Fixed:
+
+✅ **Current limit control actually works** - Changes in HA now sync to the charger (original: one-way only)  
+✅ **Status sensor shows real states** - Connected, Charging, Waiting, etc.  
+✅ **Readable time displays** - HH:MM:SS format  
+✅ **Proper device classes** - Correct icons and categorization in HA UI  
+✅ **Timezone support** - Respects charger's timezone setting  
+
 
 ---
 

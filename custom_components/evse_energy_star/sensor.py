@@ -1,23 +1,24 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
+from homeassistant.util import dt as dt_util
 from .const import DOMAIN, STATUS_MAP
 
 _LOGGER = logging.getLogger(__name__)
 
 SENSOR_DEFINITIONS = [
-    ("state", "evse_energy_star_status", None, None, None, None),
+    ("state", "evse_energy_star_status", None, None, SensorDeviceClass.ENUM, ["startup", "system_test", "waiting", "connected", "charging", "charge_complete", "suspended", "error", "unknown"]),
     ("currentSet", "evse_energy_star_current_set", "A", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None),
     ("curMeas1", "evse_energy_star_current_phase_1", "A", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None),
     ("voltMeas1", "evse_energy_star_voltage_phase_1", "V", SensorStateClass.MEASUREMENT, SensorDeviceClass.VOLTAGE, None),
     ("temperature1", "evse_energy_star_temperature_box", "°C", SensorStateClass.MEASUREMENT, SensorDeviceClass.TEMPERATURE, None),
     ("temperature2", "evse_energy_star_temperature_socket", "°C", SensorStateClass.MEASUREMENT, SensorDeviceClass.TEMPERATURE, None),
-    ("leakValue", "evse_energy_star_leakage", "mA", SensorStateClass.MEASUREMENT, None, None),
+    ("leakValue", "evse_energy_star_leakage", "mA", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None),
     ("sessionEnergy", "evse_energy_star_session_energy", "kWh", SensorStateClass.TOTAL_INCREASING, SensorDeviceClass.ENERGY, None),
     ("sessionTime", "evse_energy_star_session_time", None, None, None, None),
     ("totalEnergy", "evse_energy_star_total_energy", "kWh", SensorStateClass.TOTAL_INCREASING, SensorDeviceClass.ENERGY, None),
@@ -37,21 +38,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     device_type = entry.options.get("device_type", entry.data.get("device_type", "1_phase"))
 
     entities = [
-        EVSESensor(coordinator, entry, key, trans_key, unit, state_class, device_class)
-        for key, trans_key, unit, state_class, device_class, _ in SENSOR_DEFINITIONS
+        EVSESensor(coordinator, entry, key, trans_key, unit, state_class, device_class, options)
+        for key, trans_key, unit, state_class, device_class, options in SENSOR_DEFINITIONS
     ]
 
     if device_type == "3_phase":
         entities += [
-            EVSESensor(coordinator, entry, key, trans_key, unit, state_class, device_class)
-            for key, trans_key, unit, state_class, device_class, _ in THREE_PHASE_SENSORS
+            EVSESensor(coordinator, entry, key, trans_key, unit, state_class, device_class, options)
+            for key, trans_key, unit, state_class, device_class, options in THREE_PHASE_SENSORS
         ]
 
     entities.append(EVSEGroundStatus(coordinator, entry))
     async_add_entities(entities)
 
 class EVSESensor(CoordinatorEntity, SensorEntity):
-    def __init__(self, coordinator, config_entry: ConfigEntry, key, translation_key, unit, state_class, device_class):
+    def __init__(self, coordinator, config_entry: ConfigEntry, key, translation_key, unit, state_class, device_class, options=None):
         super().__init__(coordinator)
         self.coordinator = coordinator
         self.config_entry = config_entry
@@ -60,6 +61,8 @@ class EVSESensor(CoordinatorEntity, SensorEntity):
         self._attr_native_unit_of_measurement = unit
         self._attr_state_class = state_class
         self._attr_device_class = device_class
+        if options:
+            self._attr_options = options
 
         self._attr_has_entity_name = True
         self._attr_suggested_object_id = f"{self.coordinator.device_name_slug}_{self._attr_translation_key}"
@@ -80,11 +83,20 @@ class EVSESensor(CoordinatorEntity, SensorEntity):
             if self._key in ["sessionEnergy", "totalEnergy"]:
                 return round(float(value), 3)
             if self._key == "sessionTime":
+                # Format as HH:MM:SS
                 total_sec = int(float(value))
                 h = total_sec // 3600
                 m = (total_sec % 3600) // 60
                 s = total_sec % 60
                 return f"{h:02}:{m:02}:{s:02}"
+            if self._key == "systemTime":
+                # Apply timezone offset from charger's timeZone parameter
+                timestamp = int(float(value))
+                timezone_offset = self.coordinator.data.get("timeZone", 0)
+                # Adjust timestamp by timezone offset (in hours) - subtract to match web display
+                adjusted_timestamp = timestamp - (timezone_offset * 3600)
+                dt = datetime.fromtimestamp(adjusted_timestamp)
+                return dt.strftime("%H:%M:%S")
             if self._key == "state":
                 # Return translation key from translations files
                 return STATUS_MAP.get(value, "unknown")
@@ -97,12 +109,11 @@ class EVSESensor(CoordinatorEntity, SensorEntity):
         new_value = self.coordinator.data.get(self._key)
         if self._key == "systemTime":
             try:
-                old_str = str(self._attr_native_value)
-                new_str = str(new_value)
-                fmt = "%H:%M:%S"
-                old_dt = datetime.strptime(old_str, fmt)
-                new_dt = datetime.strptime(new_str, fmt)
-                if abs((new_dt - old_dt).total_seconds()) <= 2:
+                # Compare Unix timestamps directly
+                old_timestamp = int(float(self.coordinator.data.get(self._key, 0)))
+                new_timestamp = int(float(new_value))
+                # Only update if difference is more than 2 seconds
+                if abs(new_timestamp - old_timestamp) <= 2:
                     return
             except Exception as err:
                 _LOGGER.debug("sensor.py → systemTime comparison: %s", repr(err))
@@ -126,6 +137,8 @@ class EVSEGroundStatus(CoordinatorEntity, SensorEntity):
         self.coordinator = coordinator
         self.config_entry = config_entry
         self._attr_translation_key = "evse_energy_star_ground_status"
+        self._attr_device_class = SensorDeviceClass.ENUM
+        self._attr_options = ["✅", "❌"]
 
         self._attr_has_entity_name = True
         self._attr_suggested_object_id = f"{self.coordinator.device_name_slug}_{self._attr_translation_key}"
