@@ -78,7 +78,7 @@ class EVSENumber(CoordinatorEntity, NumberEntity):
         return self._config["max"]
 
     async def async_set_native_value(self, value: float):
-        payload = f"{self._key}={value}"
+        payload = f"{self._key}={int(value)}"
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
             "pageEvent": self._key
