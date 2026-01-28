@@ -130,6 +130,9 @@
       },
       "evse_energy_star_stop_charging": {
         "name": "Зупинити процес заряду"
+      },
+      "evse_energy_star_suspend_limits": {
+        "name": "Відключити ліміти"
       }
     },
     "button": {

@@ -24,6 +24,7 @@ async def async_setup_entry(hass, entry: ConfigEntry, async_add_entities: AddEnt
     entities.append(EVSESimpleSwitch(coordinator, entry, "oneCharge", "evse_energy_star_one_charge"))
     entities.append(EVSESimpleSwitch(coordinator, entry, "aiMode", "evse_energy_star_adaptive_mode"))
     entities.append(EVSESimpleSwitch(coordinator, entry, "evseEnabled", "evse_energy_star_stop_charging"))
+    entities.append(EVSESimpleSwitch(coordinator, entry, "suspendLimits", "evse_energy_star_suspend_limits"))
 
     async_add_entities(entities)
 
