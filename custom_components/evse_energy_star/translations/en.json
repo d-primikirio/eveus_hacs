@@ -78,7 +78,7 @@
         "name": "Socket Temperature"
       },
       "evse_energy_star_leakage": {
-        "name": "Leakage"
+        "name": "Leakage Current"
       },
       "evse_energy_star_session_energy": {
         "name": "Session Energy"
@@ -101,7 +101,7 @@
         "name": "Current Limit"
       },
       "evse_energy_star_voltage_adaptive": {
-        "name": "Adaptive Voltage"
+        "name": "Undervoltage Threshold"
       }
     },
     "select": {
@@ -120,7 +120,7 @@
         "name": "16A Mode"
       },
       "evse_energy_star_schedule": {
-        "name": "Scheduled Charging"
+        "name": "Schedule"
       },
       "evse_energy_star_one_charge": {
         "name": "One-Time Charge"
@@ -134,10 +134,10 @@
     },
     "button": {
       "evse_energy_star_time_get": {
-        "name": "Sync Time"
+        "name": "Update Time"
       },
       "evse_energy_star_start_now": {
-        "name": "Start Charging"
+        "name": "Reset Limits and Schedules"
       }
     },
     "time": {
