@@ -90,12 +90,9 @@ class EVSESensor(CoordinatorEntity, SensorEntity):
                 s = total_sec % 60
                 return f"{h:02}:{m:02}:{s:02}"
             if self._key == "systemTime":
-                # Apply timezone offset from charger's timeZone parameter
+                # Convert Unix timestamp to time string
                 timestamp = int(float(value))
-                timezone_offset = self.coordinator.data.get("timeZone", 0)
-                # Adjust timestamp by timezone offset (in hours) - subtract to match web display
-                adjusted_timestamp = timestamp - (timezone_offset * 3600)
-                dt = datetime.fromtimestamp(adjusted_timestamp)
+                dt = datetime.fromtimestamp(timestamp)
                 return dt.strftime("%H:%M:%S")
             if self._key == "state":
                 # Return translation key from translations files
