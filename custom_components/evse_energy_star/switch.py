@@ -21,10 +21,10 @@ async def async_setup_entry(hass, entry: ConfigEntry, async_add_entities: AddEnt
     ]
 
     entities.append(EVSEScheduleSwitch(coordinator, entry))
-    entities.append(EVSESimpleSwitch(coordinator, entry, "oneCharge", "evse_energy_star_one_charge"))
+    entities.append(EVSESimpleSwitch(coordinator, entry, "oneCharge", "evse_energy_star_one_charge", enabled_default=False))
     entities.append(EVSESimpleSwitch(coordinator, entry, "aiMode", "evse_energy_star_adaptive_mode"))
     entities.append(EVSESimpleSwitch(coordinator, entry, "evseEnabled", "evse_energy_star_stop_charging"))
-    entities.append(EVSESimpleSwitch(coordinator, entry, "suspendLimits", "evse_energy_star_suspend_limits"))
+    entities.append(EVSESimpleSwitch(coordinator, entry, "suspendLimits", "evse_energy_star_suspend_limits", enabled_default=False))
 
     async_add_entities(entities)
 
@@ -38,6 +38,7 @@ class EVSESwitch(SwitchEntity):
         self._attr_unique_id = f"{translation_key}_{config_entry.entry_id}"
         self._attr_has_entity_name = True
         self._attr_suggested_object_id = f"{self.coordinator.device_name_slug}_{self._attr_translation_key}"
+        self._attr_entity_registry_enabled_default = False
 
     @property
     def available(self):
@@ -153,7 +154,7 @@ class EVSEScheduleSwitch(SwitchEntity):
         }
 
 class EVSESimpleSwitch(SwitchEntity):
-    def __init__(self, coordinator, config_entry: ConfigEntry, key, translation_key):
+    def __init__(self, coordinator, config_entry: ConfigEntry, key, translation_key, enabled_default=True):
         self.coordinator = coordinator
         self.config_entry = config_entry
         self._host = coordinator.host
@@ -162,6 +163,7 @@ class EVSESimpleSwitch(SwitchEntity):
         self._attr_unique_id = f"{translation_key}_{config_entry.entry_id}"
         self._attr_has_entity_name = True
         self._attr_suggested_object_id = f"{self.coordinator.device_name_slug}_{self._attr_translation_key}"
+        self._attr_entity_registry_enabled_default = enabled_default
 
     @property
     def available(self):

@@ -38,6 +38,7 @@ class EVSETimeField(TextEntity):
         self.config_entry = config_entry
         self._host = host
         self.entity_description = description
+        self._attr_entity_registry_enabled_default = False
         self._key = description.key
 
         # Use translation key for localized entity name
