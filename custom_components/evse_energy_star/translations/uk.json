@@ -66,6 +66,9 @@
       "evse_energy_star_voltage_phase_1": {
         "name": "Напруга фаза 1"
       },
+      "evse_energy_star_power": {
+        "name": "Потужність"
+      },
       "evse_energy_star_temperature_box": {
         "name": "Температура боксу"
       },

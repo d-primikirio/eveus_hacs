@@ -16,6 +16,7 @@ SENSOR_DEFINITIONS = [
     ("currentSet", "evse_energy_star_current_set", "A", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None, True),
     ("curMeas1", "evse_energy_star_current_phase_1", "A", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None, True),
     ("voltMeas1", "evse_energy_star_voltage_phase_1", "V", SensorStateClass.MEASUREMENT, SensorDeviceClass.VOLTAGE, None, True),
+    ("powerMeas", "evse_energy_star_power", "kW", SensorStateClass.MEASUREMENT, SensorDeviceClass.POWER, None, True),
     ("temperature1", "evse_energy_star_temperature_box", "°C", SensorStateClass.MEASUREMENT, SensorDeviceClass.TEMPERATURE, None, True),
     ("temperature2", "evse_energy_star_temperature_socket", "°C", SensorStateClass.MEASUREMENT, SensorDeviceClass.TEMPERATURE, None, True),
     ("leakValue", "evse_energy_star_leakage", "mA", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None, False),
@@ -79,6 +80,8 @@ class EVSESensor(CoordinatorEntity, SensorEntity):
         if value is None:
             return None
         try:
+            if self._key == "powerMeas":
+                return round(float(value), 3)
             if self._key == "curMeas1":
                 return round(float(value), 2)
             if self._key in ["sessionEnergy", "totalEnergy"]:

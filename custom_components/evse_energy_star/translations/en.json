@@ -66,6 +66,9 @@
       "evse_energy_star_voltage_phase_1": {
         "name": "Phase 1 Voltage"
       },
+      "evse_energy_star_power": {
+        "name": "Power"
+      },
       "evse_energy_star_temperature_box": {
         "name": "Box Temperature"
       },
