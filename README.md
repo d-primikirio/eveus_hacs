@@ -28,7 +28,8 @@ This fork fixes critical issues and adds complete web interface parity that the 
 - Display charging station status
 - Sensors for power, voltage, current, temperature
 - Control charging current, start/stop charging
-- Charge scheduling, timers
+- Smart entity management - only essential entities visible by default
+- Advanced diagnostic entities available on demand
 - Time synchronization support
 - Full local operation without cloud
 - UI configuration via Config Flow

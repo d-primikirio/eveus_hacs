@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-02-02
+
+### Added
+- Added `entity_registry_enabled_default` parameter to hide diagnostic/advanced entities by default for new installations
+- Cleaner initial experience with only essential monitoring entities visible
+
+### Removed
+- Removed deprecated schedule toggle switch that controlled non-functional `isAlarm` API
+- Removed `time.py` platform with deprecated startTime/stopTime text inputs
+- Cleaned up related translations for removed entities
+
+### Changed
+- Diagnostic entities now disabled by default: leakage sensor, session/system time, ground status
+- Advanced controls now disabled by default: sync/charge buttons, timezone selector, AI voltage, advanced switches
+- Only affects new installations - existing setups unchanged
+- All entities remain available for advanced users to enable manually
+
 ## [1.1.0] - 2026-01-28
 
 ### Fixed
