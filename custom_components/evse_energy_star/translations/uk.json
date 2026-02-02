@@ -134,14 +134,6 @@
       "evse_energy_star_start_now": {
         "name": "Відключити ліміти та розклади"
       }
-    },
-    "time": {
-      "evse_energy_star_start_time": {
-        "name": "Час старту"
-      },
-      "evse_energy_star_stop_time": {
-        "name": "Час завершення"
-      }
     }
   },
   "selector": {

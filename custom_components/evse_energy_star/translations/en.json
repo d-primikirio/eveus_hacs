@@ -134,14 +134,6 @@
       "evse_energy_star_start_now": {
         "name": "Reset Limits and Schedules"
       }
-    },
-    "time": {
-      "evse_energy_star_start_time": {
-        "name": "Start Time"
-      },
-      "evse_energy_star_stop_time": {
-        "name": "Stop Time"
-      }
     }
   },
   "selector": {
