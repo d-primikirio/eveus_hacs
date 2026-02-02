@@ -56,8 +56,13 @@
           "error": "Error",
           "unknown": "Unknown"
         }
-      },
-      "evse_energy_star_current_set": {
+      },      "evse_energy_star_car_connected": {
+        "name": "Car Connected",
+        "state": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      },      "evse_energy_star_current_set": {
         "name": "Set Current"
       },
       "evse_energy_star_current_phase_1": {

@@ -13,6 +13,7 @@ _LOGGER = logging.getLogger(__name__)
 
 SENSOR_DEFINITIONS = [
     ("state", "evse_energy_star_status", None, None, SensorDeviceClass.ENUM, ["startup", "system_test", "waiting", "connected", "charging", "charge_complete", "suspended", "error", "unknown"], True),
+    ("pilot", "evse_energy_star_car_connected", None, None, SensorDeviceClass.ENUM, ["yes", "no"], True),
     ("currentSet", "evse_energy_star_current_set", "A", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None, True),
     ("curMeas1", "evse_energy_star_current_phase_1", "A", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None, True),
     ("voltMeas1", "evse_energy_star_voltage_phase_1", "V", SensorStateClass.MEASUREMENT, SensorDeviceClass.VOLTAGE, None, True),
@@ -101,6 +102,9 @@ class EVSESensor(CoordinatorEntity, SensorEntity):
             if self._key == "state":
                 # Return translation key from translations files
                 return STATUS_MAP.get(value, "unknown")
+            if self._key == "pilot":
+                # Convert pilot signal value to yes/no (1 = car connected)
+                return "yes" if str(value) == "1" else "no"
             return value
         except Exception as err:
             _LOGGER.warning("sensor.py → error processing %s: %s", self._key, repr(err))

@@ -57,6 +57,13 @@
           "unknown": "Невідомо"
         }
       },
+      "evse_energy_star_car_connected": {
+        "name": "Підключення до авто",
+        "state": {
+          "yes": "Так",
+          "no": "Ні"
+        }
+      },
       "evse_energy_star_current_set": {
         "name": "Струм (встановлений)"
       },
