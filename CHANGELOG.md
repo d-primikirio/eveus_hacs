@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-02-02
+
+### Added
+- Added power measurement sensor (`powerMeas`) displaying real-time charging power in kW
+- Added car connected sensor (`pilot`) showing whether vehicle is plugged in (Yes/No)
+- Added limit status sensor (`subState`) showing active charging restrictions:
+  - No Limits / Limited by User / Limited by Schedule / Limited by Time / Limited by Energy / Limited by Cost
+- Added `LIMIT_STATUS_MAP` constant for limit status translations
+- Complete Ukrainian and English translations for all new sensors
+
+### Changed
+- All three new sensors enabled by default for better web interface parity
+- Improved sensor value formatting with proper rounding (power: 3 decimals)
+
 ## [1.2.0] - 2026-02-02
 
 ### Added
