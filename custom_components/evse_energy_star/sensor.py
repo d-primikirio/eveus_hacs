@@ -117,8 +117,9 @@ class EVSESensor(CoordinatorEntity, SensorEntity):
                 # Return limit status translation key
                 return LIMIT_STATUS_MAP.get(value, "no_limits")
             if self._key == "pilot":
-                # Convert pilot signal value to yes/no (1 = car connected)
-                return "yes" if str(value) == "1" else "no"
+                # Convert pilot signal value to yes/no (>=1 = car connected)
+                # pilot: 0 = no car, 1 = connected (ready), 2 = connected (charging)
+                return "yes" if int(value) >= 1 else "no"
             return value
         except Exception as err:
             _LOGGER.warning("sensor.py → error processing %s: %s", self._key, repr(err))
