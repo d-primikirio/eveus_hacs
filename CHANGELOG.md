@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2026-02-18
+
+### Added
+- Added internal battery voltage sensor (`vBat`) with 2 decimal precision
+- Added translations for battery voltage sensor (English & Ukrainian)
+
+### Changed
+- **BREAKING**: Changed power measurement unit from `kW` to `W` for `powerMeas` sensor
+  - Aligns with Home Assistant standards for power sensors
+  - Historical data may need adjustment if used in energy dashboards
+- Improved limit status determination logic for `subState` sensor
+  - Now dynamically checks which limits are actually active instead of using static mapping
+  - Priority order: Session limits (time → energy → money) → Schedule limits → User limit fallback
+  - Provides more accurate status when multiple limits are configured
+- Updated pilot signal conversion logic
+  - Car now considered connected when `pilot >= 1` (previously only `pilot == 1`)
+  - Properly detects both ready (pilot=1) and charging (pilot=2) states
+
+### Removed
+- Removed unused `LIMIT_STATUS_MAP` constant from codebase
+
 ## [1.3.0] - 2026-02-02
 
 ### Added

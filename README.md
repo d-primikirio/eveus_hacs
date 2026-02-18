@@ -28,7 +28,7 @@ This fork fixes critical issues and adds complete web interface parity that the 
 ## 🔧 Features
 
 - Display charging station status and limit restrictions
-- Real-time sensors: power (kW), voltage, current, temperature
+- Real-time sensors: power (W), voltage, current, temperature, internal battery voltage
 - Car connection detection
 - Control charging current, start/stop charging
 - Smart entity management - only essential entities visible by default
