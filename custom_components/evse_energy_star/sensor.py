@@ -7,7 +7,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.util import dt as dt_util
-from .const import DOMAIN, STATUS_MAP, LIMIT_STATUS_MAP
+from .const import DOMAIN, STATUS_MAP
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -114,11 +114,34 @@ class EVSESensor(CoordinatorEntity, SensorEntity):
                 # Return translation key from translations files
                 return STATUS_MAP.get(value, "unknown")
             if self._key == "subState":
-                # Return limit status translation key
-                return LIMIT_STATUS_MAP.get(value, "no_limits")
+                # Determine actual limit status based on active limits
+                # subState 5 means charging is limited, but we need to check which limit is active
+                if value == 0:
+                    return "no_limits"
+                
+                # Check which limits are active
+                time_limit = self.coordinator.data.get("timeLimitS", 0)
+                energy_limit = self.coordinator.data.get("energyLimitS", 0)
+                money_limit = self.coordinator.data.get("moneyLimitS", 0)
+                sh1_enabled = self.coordinator.data.get("sh1Enabled", 0)
+                sh2_enabled = self.coordinator.data.get("sh2Enabled", 0)
+                
+                # Priority order: session limits > schedule limits
+                if time_limit:
+                    return "limited_by_time"
+                if energy_limit:
+                    return "limited_by_energy"
+                if money_limit:
+                    return "limited_by_money"
+                if sh1_enabled or sh2_enabled:
+                    return "limited_by_schedule"
+                
+                # Fallback to user limit if nothing else matches
+                return "limited_by_user"
             if self._key == "pilot":
-                # Convert pilot signal value to yes/no (1 = car connected)
-                return "yes" if str(value) == "1" else "no"
+                # Convert pilot signal value to yes/no (>=1 = car connected)
+                # pilot: 0 = no car, 1 = connected (ready), 2 = connected (charging)
+                return "yes" if int(value) >= 1 else "no"
             return value
         except Exception as err:
             _LOGGER.warning("sensor.py → error processing %s: %s", self._key, repr(err))
