@@ -78,6 +78,9 @@
       "evse_energy_star_current_set": {
         "name": "Струм (встановлений)"
       },
+      "evse_energy_star_voltage_int_battery": {
+        "name": "Напруга вбудованої батарейки"
+      },
       "evse_energy_star_current_phase_1": {
         "name": "Струм фаза 1"
       },

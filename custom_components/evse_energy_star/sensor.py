@@ -18,7 +18,7 @@ SENSOR_DEFINITIONS = [
     ("currentSet", "evse_energy_star_current_set", "A", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None, True),
     ("curMeas1", "evse_energy_star_current_phase_1", "A", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None, True),
     ("voltMeas1", "evse_energy_star_voltage_phase_1", "V", SensorStateClass.MEASUREMENT, SensorDeviceClass.VOLTAGE, None, True),
-    ("powerMeas", "evse_energy_star_power", "kW", SensorStateClass.MEASUREMENT, SensorDeviceClass.POWER, None, True),
+    ("powerMeas", "evse_energy_star_power", "W", SensorStateClass.MEASUREMENT, SensorDeviceClass.POWER, None, True),
     ("temperature1", "evse_energy_star_temperature_box", "°C", SensorStateClass.MEASUREMENT, SensorDeviceClass.TEMPERATURE, None, True),
     ("temperature2", "evse_energy_star_temperature_socket", "°C", SensorStateClass.MEASUREMENT, SensorDeviceClass.TEMPERATURE, None, True),
     ("leakValue", "evse_energy_star_leakage", "mA", SensorStateClass.MEASUREMENT, SensorDeviceClass.CURRENT, None, False),
@@ -26,6 +26,7 @@ SENSOR_DEFINITIONS = [
     ("sessionTime", "evse_energy_star_session_time", None, None, None, None, False),
     ("totalEnergy", "evse_energy_star_total_energy", "kWh", SensorStateClass.TOTAL_INCREASING, SensorDeviceClass.ENERGY, None, True),
     ("systemTime", "evse_energy_star_system_time", None, None, None, None, False),
+    ("vBat", "evse_energy_star_voltage_int_battery", "V", SensorStateClass.MEASUREMENT, SensorDeviceClass.VOLTAGE, None, True),
 ]
 
 THREE_PHASE_SENSORS = [
@@ -77,6 +78,13 @@ class EVSESensor(CoordinatorEntity, SensorEntity):
         return self.coordinator.last_update_success
 
     @property
+    def suggested_display_precision(self) -> int:
+    # Return the suggested number of decimal places.
+        if self._key == "vBat":
+            return 2
+        return None
+    
+    @property
     def native_value(self):
         value = self.coordinator.data.get(self._key)
         if value is None:
@@ -84,6 +92,8 @@ class EVSESensor(CoordinatorEntity, SensorEntity):
         try:
             if self._key == "powerMeas":
                 return round(float(value), 3)
+            if self._key == "vBat":
+                return None if value is None else round(value, 2)
             if self._key == "curMeas1":
                 return round(float(value), 2)
             if self._key in ["sessionEnergy", "totalEnergy"]:

@@ -74,8 +74,12 @@
           "yes": "Yes",
           "no": "No"
         }
-      },      "evse_energy_star_current_set": {
+      },
+      "evse_energy_star_current_set": {
         "name": "Set Current"
+      },
+      "evse_energy_star_voltage_int_battery": {
+        "name": "Internal battery Voltage"
       },
       "evse_energy_star_current_phase_1": {
         "name": "Phase 1 Current"
